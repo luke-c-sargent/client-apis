@@ -1,6 +1,6 @@
 import logging
 from anvil.gen3_auth import Gen3TerraAuth
-from anvil.terra import whoami
+# from anvil.terra import whoami
 from gen3.submission import Gen3Submission
 
 
@@ -26,9 +26,9 @@ def test_gen3_terra_auth(terra_auth_url, user_email, gen3_endpoint):
         projects = submission_client.get_projects(program)
         assert len(projects) > 0, f'MUST have at least one project {program}'
     logging.debug(f'OK: Authenticated from {auth._terra_auth_url} to {gen3_endpoint} projects: {projects}')
+    assert False, 'OK: Tests pass, examine log'
 
-
-def test_terra_whoami(user_email):
-    me = whoami()
-    logging.debug(me)
-    assert me == user_email, "MUST have terra identity"
+# def test_terra_whoami(user_email):
+#     me = whoami()
+#     logging.debug(me)
+#     assert me == user_email, "MUST have terra identity"
