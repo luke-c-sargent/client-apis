@@ -5,6 +5,7 @@ from subprocess import Popen, PIPE
 from requests.auth import AuthBase
 
 PRODUCTION_TERRA_FENCETOKEN_URL = "https://broad-bond-prod.appspot.com/api/link/v1/fence/accesstoken"
+DEVELOPMENT_TERRA_FENCETOKEN_URL = "https://firecloud-orchestration.dsde-dev.broadinstitute.org/api/link/v1/fence/accesstoken"
 
 
 class AnVILAuthError(Exception):
@@ -33,9 +34,10 @@ class Gen3TerraAuth(AuthBase):
         >>> auth = Gen3TerraAuth("https://firecloud-orchestration.dsde-dev.broadinstitute.org/")
 
 
+
     """
 
-    def __init__(self, terra_auth_url=PRODUCTION_TERRA_FENCETOKEN_URL, user_email=None):
+    def __init__(self, terra_auth_url=DEVELOPMENT_TERRA_FENCETOKEN_URL, user_email=None):
         """Initializes properties."""
         self._access_token = None
         self._terra_auth_url = terra_auth_url
@@ -124,6 +126,7 @@ class Gen3TerraAuth(AuthBase):
                 logging.debug(f'Terra access token expires in {str(expires_at - now)}')
 
                 self._access_token = terra_access_token['token']
+                logging.debug(self._access_token)
             except Exception as e:
                 raise AnVILAuthError(
                     "Failed to authenticate to {}\n{}".format(self._terra_auth_url, str(e))
