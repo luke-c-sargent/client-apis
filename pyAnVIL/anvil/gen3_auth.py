@@ -109,13 +109,13 @@ class Gen3TerraAuth(AuthBase):
                 p = Popen(cmd, stdout=PIPE, stderr=PIPE)
                 gcloud_access_token, stderr = p.communicate()
                 gcloud_access_token = gcloud_access_token.decode("utf-8").rstrip()
-                assert len(gcloud_access_token) > 0, 'MUST have an access token'
+                assert len(gcloud_access_token) > 0, f'get gcloud_access_token MUST have an access token {stderr}'
                 logging.debug(f"gcloud_access_token {gcloud_access_token}")
                 # authenticate to terra, ask for fence/accesstoken
                 headers = {'Authorization': f'Bearer {gcloud_access_token}'}
                 r = requests.get(self._terra_auth_url, headers=headers)
                 assert r.status_code == 200, f'MUST respond with 200 {self._terra_auth_url}'
-
+                logging.debug(r.text)
                 terra_access_token = r.json()
                 assert len(terra_access_token['token']) > 0, 'MUST have an access token'
                 assert len(terra_access_token['expires_at']) > 0, 'MUST have an expires_at '
