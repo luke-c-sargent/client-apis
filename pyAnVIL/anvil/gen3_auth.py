@@ -114,7 +114,7 @@ class Gen3TerraAuth(AuthBase):
                 # authenticate to terra, ask for fence/accesstoken
                 headers = {'Authorization': f'Bearer {gcloud_access_token}'}
                 r = requests.get(self._terra_auth_url, headers=headers)
-                assert r.status_code == 200, f'MUST respond with 200 {self._terra_auth_url}'
+                assert r.status_code == 200, f'MUST respond with 200 {self._terra_auth_url} {r.text}'
                 logging.debug(r.text)
                 terra_access_token = r.json()
                 assert len(terra_access_token['token']) > 0, 'MUST have an access token'
