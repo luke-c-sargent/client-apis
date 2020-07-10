@@ -10,9 +10,12 @@ from datetime import date, datetime
 
 
 USER_PROJECT = None
+USER_PROGRAM = None
 BLOB_CACHE = sqlite3.connect('blob_cache.sqlite')
 logger = logging.getLogger('terra')
 
+# Defaults
+DEFAULT_WORKSPACE_LIST_FIELDS = "accessLevel,workspace.attributes.description,workspace.name,workspace.namespace"
 
 def CREATE_GOOGLE_STORAGE_CACHE_TABLE():
     cur = BLOB_CACHE.cursor()
@@ -187,3 +190,13 @@ def get_entities(namespace='anvil-datastorage', workspace=None, entity_name=None
     """Returns all entities in a workspace."""
     entities = [AttrDict(e) for e in fapi.get_entities(namespace, workspace, entity_name).json()]
     return entities
+
+def list_workspaces(namespaces=None, fapi=FAPI, user_project=USER_PROJECT, fields=DEFAULT_WORKSPACE_LIST_FIELDS):
+    return fapi.list_workspaces(fields=fields).json()
+
+def get_workspace(workspace_name=USER_PROJECT, namespace=USER_PROGRAM, fapi=FAPI):
+    if workspace_name == None:
+        raise ValueError("'workspace_name' cannot be None")
+    if namespace == None:
+        raise ValueError("'namespace' cannot be None")
+    return fapi.get_workspace(namespace, workspace_name)
